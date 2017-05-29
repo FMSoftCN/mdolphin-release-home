@@ -1,0 +1,246 @@
+<html
+<head>
+<TITLE>http://...</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+
+<style>
+<!--
+.InputBarClass {
+	position: fixed;
+	left: 0px;
+	top: 30px;
+	width:480px;
+	height:27px;
+}
+
+.Td1Class {
+	width: 384px;
+	height: 27px;
+	border-width: 0px;
+	background-image: url(input/input.png);
+	background-repeat: no-repeat;
+}
+
+.Td2Class {
+	width: 96px;
+	height: 27px;
+	border-width: 0px;
+}
+
+
+.AddressClass{
+	position: fixed;
+	left: 43px;
+	top: 36px;
+	width:332px;
+	height:20px;
+	border-width: 0px;
+    font: 16px arial;
+}
+
+.KeyClass {
+	position: fixed;
+	left: 0px;
+	top: 65px;
+}
+-->
+
+</style>
+
+<script type="text/javascript">
+var lastKeyDownObject = null;  
+function insertAtCaret (textObj, textFeildValue){  
+	if(document.all){    
+		if   (textObj.createTextRange && textObj.caretPos)   {  
+			var caretPos = textObj.caretPos;  
+			caretPos.text = caretPos.text.charAt(caretPos.text.length-1) == '   '?textFeildValue +'   ' :textFeildValue;  
+		}else{  
+			textObj.value = textFeildValue;  
+		}  
+	}else{  
+		if(textObj.setSelectionRange){  
+			var rangeStart = textObj.selectionStart;  
+			var rangeEnd = textObj.selectionEnd;  
+			var tempStr1 = textObj.value.substring(0,rangeStart);  
+			var tempStr2 = textObj.value.substring(rangeEnd);  
+			textObj.value = tempStr1 + textFeildValue + tempStr2;
+			rangeStart += textFeildValue.length;
+			//textObj.setSelectionRange(rangeStart, rangeStart);
+			textObj.focus();
+		}else{  
+			alert("This   version   of   Mozilla   based   browser   does   not   support   setSelectionRange");  
+		}  
+	}  
+}
+
+function InputChar(char)
+{
+	var obj = document.getElementById("addressId");
+	insertAtCaret(obj, char);
+}
+
+function DeleteChar()
+{	
+	var textObj = document.getElementById("addressId");	
+	if(textObj.setSelectionRange){  
+		var rangeStart = textObj.selectionStart;  
+		var rangeEnd = textObj.selectionEnd;  
+		var tempStr1 = textObj.value.substring(0,rangeStart-1);  
+		var tempStr2 = textObj.value.substring(rangeEnd);  
+		textObj.value = tempStr1 + tempStr2;
+		rangeStart -= 1;  
+		textObj.setSelectionRange(rangeStart, rangeStart);
+		textObj.focus();
+	}else{  
+		alert("This   version   of   Mozilla   based   browser   does   not   support   setSelectionRange");  
+	}  
+}
+function KeyOut(obj, e)
+{
+    if ( obj == lastKeyDownObject)
+    {
+        KeyUp(obj);
+        if (e != 'NULL')
+        InputChar(e);
+        else
+        DeleteChar();
+    }
+}
+function KeyDown(obj)
+{
+	if (lastKeyDownObject)
+		KeyUp(lastKeyDownObject);
+
+	lastKeyDownObject = obj;
+
+	var res = obj.src;
+	var len = res.length;
+	if (len>4 && (res.indexOf(".png", len-4) !=-1))
+		obj.src = res.substring(0,len-4)+"_on.png";
+
+}
+
+function KeyUp(obj)
+{
+	if (obj == lastKeyDownObject)
+		lastKeyDownObject = null;
+
+        //	alert("hello");  
+	var res = obj.src;
+	var len = res.length;
+	if (len>7 && (res.indexOf("_on.png", len-7) !=-1))
+		obj.src = res.substring(0,len-7)+".png";
+}
+
+function goNextWebsite()
+{
+	var url = document.getElementById("addressId").value;
+	if((url.indexOf("http://")==-1) && (url.indexOf("HTTP://")==-1) && (url.indexOf("file://")==-1))
+		url= "http://"+url;
+
+	window.open(url, name="_blank");
+}
+
+function changeTitle() {
+	window.top.document.title = window.document.title;
+}
+
+function keyInput(e) {
+    var keynum
+    if(window.event) // IE
+    {
+        keynum = e.keyCode
+    }
+    else if(e.which) // Netscape/Firefox/Opera
+    {
+        keynum = e.which
+    }
+    if (keynum == 13)
+        goNextWebsite();
+}
+
+</script>
+</head>
+<body leftMargin=0 rightMargin=0 topMargin=0 bottomMargin=0 bgcolor="#cacaca" onload="changeTitle()">
+
+<table class="InputBarClass" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td class="Td1Class">
+<input  class="AddressClass" type="text" id="addressId" name="input_name" onkeypress="keyInput(event)" /> 
+</td>
+<td class="Td2Class">
+<img src="input/go.png" usemap="#gomap" id="goId"/>
+<map id="gomap" name="gomap">
+<area shape="rect" coords=" 1, 4, 51, 22" onclick="goNextWebsite()" onmousedown="KeyDown(document.getElementById('goId'));" onmouseup="KeyUp(document.getElementById('goId'));" onmouseout="KeyUp(document.getElementById('goId'));"/>
+</map>
+</td>
+<tr>
+<table>
+<script type="text/javascript">
+document.getElementById("addressId").focus();
+</script>
+<table class="KeyClass" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td><img src="input/01.png" onclick="InputChar('1');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'1');"/></td>
+<td><img src="input/02.png" onclick="InputChar('2');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this, '2');"/></td>
+<td><img src="input/03.png" onclick="InputChar('3');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'3');"/></td>
+<td><img src="input/04.png" onclick="InputChar('4');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'4');"/></td>
+<td><img src="input/05.png" onclick="InputChar('5');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'5');"/></td>
+<td><img src="input/06.png" onclick="InputChar('6');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'6');"/></td>
+<td><img src="input/07.png" onclick="InputChar('7');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'7');"/></td>
+<td><img src="input/08.png" onclick="InputChar('8');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'8');"/></td>
+<td><img src="input/09.png" onclick="InputChar('9');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'9');"/></td>
+<td><img src="input/10.png" onclick="InputChar('0');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'0');"/></td>
+</tr>
+<tr>
+<td><img src="input/11.png" onclick="InputChar('q');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'q');"/></td>
+<td><img src="input/12.png" onclick="InputChar('w');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'w');"/></td>
+<td><img src="input/13.png" onclick="InputChar('e');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'e');"/></td>
+<td><img src="input/14.png" onclick="InputChar('r');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'r');"/></td>
+<td><img src="input/15.png" onclick="InputChar('t');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'t');"/></td>
+<td><img src="input/16.png" onclick="InputChar('y');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'y');"/></td>
+<td><img src="input/17.png" onclick="InputChar('u');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'u');"/></td>
+<td><img src="input/18.png" onclick="InputChar('i');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'i');"/></td>
+<td><img src="input/19.png" onclick="InputChar('o');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'o');"/></td>
+<td><img src="input/20.png" onclick="InputChar('p');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'p');"/></td>
+</tr>
+<tr>
+<td><img src="input/22.png" onclick="InputChar('a');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'a');"/></td>
+<td><img src="input/23.png" onclick="InputChar('s');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'s');"/></td>
+<td><img src="input/24.png" onclick="InputChar('d');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'d');"/></td>
+<td><img src="input/25.png" onclick="InputChar('f');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'f');"/></td>
+<td><img src="input/26.png" onclick="InputChar('g');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'g');"/></td>
+<td><img src="input/27.png" onclick="InputChar('h');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'h');"/></td>
+<td><img src="input/28.png" onclick="InputChar('j');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'j');"/></td>
+<td><img src="input/29.png" onclick="InputChar('k');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'k');"/></td>
+<td><img src="input/32.png" onclick="InputChar('l');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'l');"/></td>
+<td><img src="input/41.png" onclick="InputChar('#');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'#');"/></td>
+</tr>
+<tr>
+<td><img src="input/31.png" onclick="InputChar(':');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,':');"/></td>
+<td><img src="input/33.png" onclick="InputChar('z');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'z');"/></td>
+<td><img src="input/34.png" onclick="InputChar('x');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'x');"/></td>
+<td><img src="input/35.png" onclick="InputChar('c');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'c');"/></td>
+<td><img src="input/36.png" onclick="InputChar('v');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'v');"/></td>
+<td><img src="input/37.png" onclick="InputChar('b');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'b');"/></td>
+<td><img src="input/38.png" onclick="InputChar('n');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'n');"/></td>
+<td><img src="input/39.png" onclick="InputChar('m');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'m');"/></td>
+<td><img src="input/49.png" onclick="InputChar('.');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'.');"/></td>
+<td><img src="input/50.png" onclick="InputChar('/');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'/');"/></td>
+</tr>
+<tr>
+<td><img src="input/42.png" onclick="InputChar('%');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'%');"/></td>
+<td><img src="input/40.png" onclick="InputChar('-');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'-');"/></td>
+<td><img src="input/43.png" onclick="InputChar('=');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'=');"/></td>
+<td><img src="input/21.png" onclick="InputChar('?');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'?');"/></td>
+<td><img src="input/44.png" onclick="InputChar('www.');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'www.');"/></td>
+<td><img src="input/45.png" onclick="InputChar('.com');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'.com');"/></td>
+<td><img src="input/46.png" onclick="InputChar('.net');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'.net');"/></td>
+<td><img src="input/47.png" onclick="InputChar('.cn');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'.cn');"/></td>
+<td><img src="input/48.png" onclick="InputChar('.org');" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this,'.org');"/></td>
+<td><img src="input/30.png" onclick="DeleteChar();" onmousedown="KeyDown(this);" onmouseup="KeyUp(this);" onmouseout="KeyOut(this, 'NULL');"/></td>
+</tr>
+</table>
+</body>
+</html>
+

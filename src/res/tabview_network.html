@@ -1,0 +1,121 @@
+<html
+<head>
+<style>
+.iframe_style{
+	position: absolute;
+	left: 0px;
+	top: 20px;
+}
+.body_style{
+	position: absolute;
+	left: 155px;
+	top: 120px;
+}
+</style>
+<TITLE>Home</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<script type="text/javascript">
+
+/***********************************************
+ * Tabbed Document Viewer script- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+ * This notice MUST stay intact for legal use
+ * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+ ***********************************************/
+
+var imgSrc= new Array( "tabview/http.png", "tabview/chinese_sites.png", "tabview/english_sites.png", "tabview/network_setting.png");
+
+var imgSrcOn= new Array("tabview/http_on.png", "tabview/chinese_sites_on.png", "tabview/english_sites_on.png", "tabview/network_setting_on.png");
+
+
+function handlelink(id, url){
+    document.forms["sessions"].hideme.value = id;
+	if (document.getElementById){
+		var tabobj=document.getElementById("list");
+		var tabobjlinks=tabobj.getElementsByTagName("IMG");
+		for (i=0; i<tabobjlinks.length; i++)  {
+			if (i == id)
+				tabobjlinks[i].src=imgSrcOn[i];
+			else
+				tabobjlinks[i].src=imgSrc[i];
+		}
+		document.getElementById("tabiframe").src=url;
+
+		return false;
+	}
+	else
+		return true;
+}
+
+function layout()
+{
+    if (screen.width == 800) {
+        return;
+    }
+
+    var contentWidth = 480;
+    if (screen.height == 240) {
+        var contentHeight = 208;
+    } else {
+        var contentHeight = 240;
+    }
+    var toolbarHeight = 32;
+
+    var docRoot = document.body;
+    docRoot.style.position = "absolute";
+    docRoot.style.top = (screen.height - contentHeight -toolbarHeight)/2;
+    docRoot.style.left = (screen.width - contentWidth)/2;
+}
+
+function showFrame()
+{
+    layout();
+    
+	var index = document.forms["sessions"].hideme.value;
+	if (index == "0")
+		handlelink(0, "input.html");
+	else if (index == "1")
+		handlelink(1, "index.html");
+	else if (index == "2")
+		handlelink(2, "en_index.html");
+	else if (index == "3")
+		handlelink(3, "network.html");
+}
+</script>
+
+</head>
+<body onload="layout()" class="body_style" leftMargin=0px rightMargin=0 topMargin=0px bottomMargin=0 width=480px height=242px bgcolor="#cacaca">
+
+<table border="0" cellspacing="0" cellpadding="0" id="list">
+<tr>
+<td>
+<a href="tabview_input.html">
+<img src="tabview/http.png"  />
+</a>
+</td>
+<td>
+<a href="tabview_index.html">
+<img src="tabview/chinese_sites.png"  />
+</a>
+</td>
+<td>
+<a href="tabview_en_index.html">
+<img src="tabview/english_sites.png" />
+</a>
+</td>
+<td>
+<a href	="tabview_network.html" >
+<img src="tabview/network_setting_on.png" />
+</a>
+</td>
+</tr>
+</table>
+
+<iframe class="iframe_style" id="tabiframe" src="network.html" width="480px" height="210px" frameBorder="0px"></iframe>
+
+<form name="sessions">
+<input name="hideme" type="hidden" vlaue="0"><br>
+</form>
+
+</body>
+
+</html>

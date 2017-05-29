@@ -1,0 +1,9 @@
+*******************************************************************************
+What's new in the branch rel-2-0-2 of mdhome (v2.0.2)
+
+04/26. CLEANUP #2: Update version to be 2.0.2 in configure.in. (ymwei)
+	* configure.in
+
+04/26. CLEANUP #1: Remove some definitions (LT things) in configure.in. (ymwei)
+	* configure.in
+	* src/Makefile.am
